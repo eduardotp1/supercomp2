@@ -9,8 +9,11 @@ class Experimento {
         int n;
         double *arr;
         double time;
-        virtual void experiment_code();
+        virtual void experiment_code()=0;
         void run();
+        operator double();
+        bool operator < (Experimento *);
+        bool operator < (double);  
 };
 
 

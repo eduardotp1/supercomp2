@@ -5,6 +5,9 @@
 #include <chrono> 
 #include <ostream>
 
+Experimento::Experimento() {
+}
+
 double *Experimento::gera_entrada(int n){
     double *arr=new double[n];
     for(int i=0;i<n;i++){
@@ -34,3 +37,17 @@ void Experimento::run() {
     this->time = diff.count();
 }
 
+Experimento::operator double() {
+    return this->duration();
+}
+
+bool Experimento::operator < (Experimento *e) {
+    if(e->time < this->time && e->n == this->n){
+        return true;
+    }
+    return false;
+}
+
+bool Experimento::operator < (double time) {
+    return this->time < time;
+}
