@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 int foo(int x) {
 	int *vec1 = new int[8];

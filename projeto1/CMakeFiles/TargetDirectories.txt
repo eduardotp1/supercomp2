@@ -1,0 +1,4 @@
+/home/tirta/supercomp/projeto1/CMakeFiles/rebuild_cache.dir
+/home/tirta/supercomp/projeto1/CMakeFiles/edit_cache.dir
+/home/tirta/supercomp/projeto1/CMakeFiles/main_O3.dir
+/home/tirta/supercomp/projeto1/CMakeFiles/main_fast.dir

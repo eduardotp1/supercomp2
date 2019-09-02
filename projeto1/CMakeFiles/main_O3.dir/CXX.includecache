@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/tirta/supercomp/projeto1/collision.cpp
+rect.hpp
+/home/tirta/supercomp/projeto1/rect.hpp
+collision.hpp
+/home/tirta/supercomp/projeto1/collision.hpp
+iostream
+-
+vector
+-
+cmath
+-
+
+/home/tirta/supercomp/projeto1/collision.hpp
+vector
+-
+
+/home/tirta/supercomp/projeto1/main.cpp
+rect.hpp
+/home/tirta/supercomp/projeto1/rect.hpp
+collision.hpp
+/home/tirta/supercomp/projeto1/collision.hpp
+iostream
+-
+vector
+-
+cmath
+-
+chrono
+-
+
+/home/tirta/supercomp/projeto1/rect.cpp
+iostream
+-
+rect.hpp
+/home/tirta/supercomp/projeto1/rect.hpp
+
+/home/tirta/supercomp/projeto1/rect.hpp
+

@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/main_O3.dir/main.cpp.o CMakeFiles/main_O3.dir/collision.cpp.o CMakeFiles/main_O3.dir/rect.cpp.o  -o main_O3 

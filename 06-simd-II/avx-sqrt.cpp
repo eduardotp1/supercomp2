@@ -20,6 +20,9 @@ __m256 __attribute__((aligned(32))) vectorized[V]; //Vectorized array
 inline void avx_sqrt()
 {
   //****** Insira o codigo AVX aqui *******
+  for (int i = 0; i < V; i++) {
+    vectorized[i] = _mm256_sqrt_ps(vectorized[i]);
+      }
 }
 
 using namespace std;
