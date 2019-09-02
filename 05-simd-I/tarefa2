@@ -1,0 +1,404 @@
+	.file	"tarefa2.cpp"
+	.text
+	.p2align 4,,15
+	.globl	_Z15soma_positivos1Pdi
+	.type	_Z15soma_positivos1Pdi, @function
+_Z15soma_positivos1Pdi:
+.LFB3082:
+	.cfi_startproc
+	testl	%esi, %esi
+	jle	.L6
+	leal	-1(%rsi), %eax
+	pxor	%xmm0, %xmm0
+	pxor	%xmm2, %xmm2
+	leaq	8(%rdi,%rax,8), %rax
+	.p2align 4,,10
+	.p2align 3
+.L5:
+	movsd	(%rdi), %xmm1
+	ucomisd	%xmm2, %xmm1
+	jbe	.L3
+	addsd	%xmm1, %xmm0
+.L3:
+	addq	$8, %rdi
+	cmpq	%rax, %rdi
+	jne	.L5
+	rep ret
+	.p2align 4,,10
+	.p2align 3
+.L6:
+	pxor	%xmm0, %xmm0
+	ret
+	.cfi_endproc
+.LFE3082:
+	.size	_Z15soma_positivos1Pdi, .-_Z15soma_positivos1Pdi
+	.section	.rodata.str1.1,"aMS",@progbits,1
+.LC6:
+	.string	"Tempo soma:"
+.LC8:
+	.string	"\n"
+	.section	.text.startup,"ax",@progbits
+	.p2align 4,,15
+	.globl	main
+	.type	main, @function
+main:
+.LFB3083:
+	.cfi_startproc
+	.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
+	.cfi_lsda 0x1b,.LLSDA3083
+	pushq	%r14
+	.cfi_def_cfa_offset 16
+	.cfi_offset 14, -16
+	pushq	%r13
+	.cfi_def_cfa_offset 24
+	.cfi_offset 13, -24
+	movl	$80000000, %edi
+	pushq	%r12
+	.cfi_def_cfa_offset 32
+	.cfi_offset 12, -32
+	pushq	%rbp
+	.cfi_def_cfa_offset 40
+	.cfi_offset 6, -40
+	movl	$2567483615, %ebp
+	pushq	%rbx
+	.cfi_def_cfa_offset 48
+	.cfi_offset 3, -48
+	subq	$10032, %rsp
+	.cfi_def_cfa_offset 10080
+	movq	%fs:40, %rax
+	movq	%rax, 10024(%rsp)
+	xorl	%eax, %eax
+	leaq	5024(%rsp), %rbx
+	leaq	16(%rsp), %r13
+.LEHB0:
+	call	_Znam@PLT
+.LEHE0:
+	leaq	80000000(%rax), %r14
+	movq	%rax, %r12
+	.p2align 4,,10
+	.p2align 3
+.L25:
+	leaq	16(%rbx), %rax
+	movl	$27765, %edx
+	movq	%rbx, %rsi
+	movq	%r13, %rdi
+	movq	%rax, 5024(%rsp)
+	movl	$1634100580, 16(%rbx)
+	movw	%dx, 4(%rax)
+	movb	$116, 6(%rax)
+	movq	$7, 5032(%rsp)
+	movb	$0, 5047(%rsp)
+.LEHB1:
+	call	_ZNSt13random_device7_M_initERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE@PLT
+.LEHE1:
+	movq	5024(%rsp), %rdi
+	leaq	16(%rbx), %rax
+	cmpq	%rax, %rdi
+	je	.L11
+	call	_ZdlPv@PLT
+.L11:
+	movq	%r13, %rdi
+.LEHB2:
+	call	_ZNSt13random_device9_M_getvalEv@PLT
+.LEHE2:
+	movl	%eax, %ecx
+	movl	$1, %edx
+	movq	%rcx, 5024(%rsp)
+	jmp	.L13
+	.p2align 4,,10
+	.p2align 3
+.L49:
+	movq	-8(%rbx,%rdx,8), %rcx
+.L13:
+	movq	%rcx, %rax
+	shrq	$30, %rax
+	xorq	%rcx, %rax
+	imulq	$1812433253, %rax, %rax
+	addl	%edx, %eax
+	movq	%rax, (%rbx,%rdx,8)
+	addq	$1, %rdx
+	cmpq	$624, %rdx
+	jne	.L49
+	movl	$624, %ecx
+	movl	$2, %r8d
+	leaq	1816(%rbx), %rdi
+	cmpq	$624, %rcx
+	pxor	%xmm0, %xmm0
+	movsd	.LC1(%rip), %xmm2
+	leaq	3168(%rbx), %rsi
+	je	.L14
+.L52:
+	movq	5024(%rsp,%rcx,8), %r9
+	addq	$1, %rcx
+.L15:
+	movq	%r9, %rdx
+	shrq	$11, %rdx
+	movl	%edx, %eax
+	xorq	%r9, %rax
+	movq	%rax, %rdx
+	salq	$7, %rdx
+	andl	$2636928640, %edx
+	xorq	%rdx, %rax
+	movq	%rax, %rdx
+	salq	$15, %rdx
+	andl	$4022730752, %edx
+	xorq	%rdx, %rax
+	movq	%rax, %rdx
+	shrq	$18, %rdx
+	xorq	%rdx, %rax
+	js	.L21
+	pxor	%xmm1, %xmm1
+	cvtsi2sdq	%rax, %xmm1
+.L22:
+	movsd	%xmm2, (%rsp)
+	mulsd	%xmm2, %xmm1
+	cmpl	$1, %r8d
+	flds	.LC2(%rip)
+	fldl	(%rsp)
+	addsd	%xmm1, %xmm0
+	fmulp	%st, %st(1)
+	fstpl	8(%rsp)
+	movsd	8(%rsp), %xmm2
+	jne	.L31
+	divsd	%xmm2, %xmm0
+	ucomisd	.LC1(%rip), %xmm0
+	jnb	.L50
+.L23:
+	mulsd	.LC3(%rip), %xmm0
+	movq	%r13, %rdi
+	addq	$8, %r12
+	subsd	.LC4(%rip), %xmm0
+	movsd	%xmm0, -8(%r12)
+	call	_ZNSt13random_device7_M_finiEv@PLT
+	cmpq	%r12, %r14
+	jne	.L25
+	call	_ZNSt6chrono3_V212system_clock3nowEv@PLT
+	movq	%rax, %rbx
+	call	_ZNSt6chrono3_V212system_clock3nowEv@PLT
+	pxor	%xmm0, %xmm0
+	subq	%rbx, %rax
+	leaq	.LC6(%rip), %rsi
+	leaq	_ZSt4cout(%rip), %rdi
+	movl	$11, %edx
+	cvtsi2sdq	%rax, %xmm0
+	divsd	.LC5(%rip), %xmm0
+	movsd	%xmm0, (%rsp)
+.LEHB3:
+	call	_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_l@PLT
+	movsd	(%rsp), %xmm0
+	leaq	_ZSt4cout(%rip), %rdi
+	mulsd	.LC7(%rip), %xmm0
+	call	_ZNSo9_M_insertIdEERSoT_@PLT
+	leaq	.LC8(%rip), %rsi
+	movq	%rax, %rdi
+	call	_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@PLT
+.LEHE3:
+	xorl	%eax, %eax
+	movq	10024(%rsp), %rsi
+	xorq	%fs:40, %rsi
+	jne	.L51
+	addq	$10032, %rsp
+	.cfi_remember_state
+	.cfi_def_cfa_offset 48
+	popq	%rbx
+	.cfi_def_cfa_offset 40
+	popq	%rbp
+	.cfi_def_cfa_offset 32
+	popq	%r12
+	.cfi_def_cfa_offset 24
+	popq	%r13
+	.cfi_def_cfa_offset 16
+	popq	%r14
+	.cfi_def_cfa_offset 8
+	ret
+	.p2align 4,,10
+	.p2align 3
+.L31:
+	.cfi_restore_state
+	cmpq	$624, %rcx
+	movl	$1, %r8d
+	jne	.L52
+.L14:
+	movq	%rbx, %rdx
+	movq	%rbx, %rax
+	.p2align 4,,10
+	.p2align 3
+.L17:
+	movq	(%rax), %rcx
+	movq	8(%rax), %r9
+	andq	$-2147483648, %rcx
+	andl	$2147483647, %r9d
+	orq	%r9, %rcx
+	movq	%rcx, %r9
+	shrq	%r9
+	xorq	3176(%rax), %r9
+	andl	$1, %ecx
+	je	.L16
+	xorq	%rbp, %r9
+.L16:
+	movq	%r9, (%rax)
+	addq	$8, %rax
+	cmpq	%rax, %rdi
+	jne	.L17
+	.p2align 4,,10
+	.p2align 3
+.L19:
+	movq	1816(%rdx), %rax
+	movq	1824(%rdx), %rcx
+	andq	$-2147483648, %rax
+	andl	$2147483647, %ecx
+	orq	%rcx, %rax
+	movq	%rax, %rcx
+	shrq	%rcx
+	xorq	(%rdx), %rcx
+	testb	$1, %al
+	je	.L18
+	xorq	%rbp, %rcx
+.L18:
+	movq	%rcx, 1816(%rdx)
+	addq	$8, %rdx
+	cmpq	%rdx, %rsi
+	jne	.L19
+	movq	5024(%rsp), %r9
+	movq	10008(%rsp), %rax
+	movq	%r9, %rdx
+	andq	$-2147483648, %rax
+	andl	$2147483647, %edx
+	orq	%rdx, %rax
+	movq	%rax, %rdx
+	shrq	%rdx
+	xorq	8192(%rsp), %rdx
+	testb	$1, %al
+	je	.L20
+	xorq	%rbp, %rdx
+.L20:
+	movq	%rdx, 10008(%rsp)
+	movl	$1, %ecx
+	jmp	.L15
+.L21:
+	movq	%rax, %rdx
+	pxor	%xmm1, %xmm1
+	shrq	%rdx
+	andl	$1, %eax
+	orq	%rax, %rdx
+	cvtsi2sdq	%rdx, %xmm1
+	addsd	%xmm1, %xmm1
+	jmp	.L22
+.L50:
+	pxor	%xmm1, %xmm1
+	movsd	.LC1(%rip), %xmm0
+	call	nextafter@PLT
+	jmp	.L23
+.L51:
+	call	__stack_chk_fail@PLT
+.L33:
+	movq	%rax, %rbx
+	movq	%r13, %rdi
+	call	_ZNSt13random_device7_M_finiEv@PLT
+	movq	%rbx, %rdi
+.LEHB4:
+	call	_Unwind_Resume@PLT
+.L32:
+	movq	5024(%rsp), %rdi
+	addq	$16, %rbx
+	movq	%rax, %rbp
+	cmpq	%rbx, %rdi
+	je	.L27
+	call	_ZdlPv@PLT
+.L27:
+	movq	%rbp, %rdi
+	call	_Unwind_Resume@PLT
+.LEHE4:
+	.cfi_endproc
+.LFE3083:
+	.globl	__gxx_personality_v0
+	.section	.gcc_except_table,"a",@progbits
+.LLSDA3083:
+	.byte	0xff
+	.byte	0xff
+	.byte	0x1
+	.uleb128 .LLSDACSE3083-.LLSDACSB3083
+.LLSDACSB3083:
+	.uleb128 .LEHB0-.LFB3083
+	.uleb128 .LEHE0-.LEHB0
+	.uleb128 0
+	.uleb128 0
+	.uleb128 .LEHB1-.LFB3083
+	.uleb128 .LEHE1-.LEHB1
+	.uleb128 .L32-.LFB3083
+	.uleb128 0
+	.uleb128 .LEHB2-.LFB3083
+	.uleb128 .LEHE2-.LEHB2
+	.uleb128 .L33-.LFB3083
+	.uleb128 0
+	.uleb128 .LEHB3-.LFB3083
+	.uleb128 .LEHE3-.LEHB3
+	.uleb128 0
+	.uleb128 0
+	.uleb128 .LEHB4-.LFB3083
+	.uleb128 .LEHE4-.LEHB4
+	.uleb128 0
+	.uleb128 0
+.LLSDACSE3083:
+	.section	.text.startup
+	.size	main, .-main
+	.p2align 4,,15
+	.type	_GLOBAL__sub_I__Z15soma_positivos1Pdi, @function
+_GLOBAL__sub_I__Z15soma_positivos1Pdi:
+.LFB3652:
+	.cfi_startproc
+	leaq	_ZStL8__ioinit(%rip), %rdi
+	subq	$8, %rsp
+	.cfi_def_cfa_offset 16
+	call	_ZNSt8ios_base4InitC1Ev@PLT
+	movq	_ZNSt8ios_base4InitD1Ev@GOTPCREL(%rip), %rdi
+	leaq	__dso_handle(%rip), %rdx
+	leaq	_ZStL8__ioinit(%rip), %rsi
+	addq	$8, %rsp
+	.cfi_def_cfa_offset 8
+	jmp	__cxa_atexit@PLT
+	.cfi_endproc
+.LFE3652:
+	.size	_GLOBAL__sub_I__Z15soma_positivos1Pdi, .-_GLOBAL__sub_I__Z15soma_positivos1Pdi
+	.section	.init_array,"aw"
+	.align 8
+	.quad	_GLOBAL__sub_I__Z15soma_positivos1Pdi
+	.local	_ZStL8__ioinit
+	.comm	_ZStL8__ioinit,1,1
+	.section	.rodata.cst8,"aM",@progbits,8
+	.align 8
+.LC1:
+	.long	0
+	.long	1072693248
+	.section	.rodata.cst4,"aM",@progbits,4
+	.align 4
+.LC2:
+	.long	1333788672
+	.section	.rodata.cst8
+	.align 8
+.LC3:
+	.long	0
+	.long	1077149696
+	.align 8
+.LC4:
+	.long	0
+	.long	1076101120
+	.align 8
+.LC5:
+	.long	0
+	.long	1104006501
+	.align 8
+.LC7:
+	.long	0
+	.long	1083129856
+	.hidden	DW.ref.__gxx_personality_v0
+	.weak	DW.ref.__gxx_personality_v0
+	.section	.data.rel.local.DW.ref.__gxx_personality_v0,"awG",@progbits,DW.ref.__gxx_personality_v0,comdat
+	.align 8
+	.type	DW.ref.__gxx_personality_v0, @object
+	.size	DW.ref.__gxx_personality_v0, 8
+DW.ref.__gxx_personality_v0:
+	.quad	__gxx_personality_v0
+	.hidden	__dso_handle
+	.ident	"GCC: (Ubuntu 7.4.0-1ubuntu1~18.04.1) 7.4.0"
+	.section	.note.GNU-stack,"",@progbits

@@ -1,0 +1,3 @@
+/home/tirta/supercomp/04-cmake-debugging/build/CMakeFiles/rebuild_cache.dir
+/home/tirta/supercomp/04-cmake-debugging/build/CMakeFiles/hello.dir
+/home/tirta/supercomp/04-cmake-debugging/build/CMakeFiles/edit_cache.dir
