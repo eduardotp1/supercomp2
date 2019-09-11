@@ -152,6 +152,22 @@ double pi_omp_parallel_critical_errado(long steps){
     return pi;
 }
 
+
+double pi_omp_for(long steps){
+    double x,  sum = 0.0;
+    double step = 1.0 / (double)steps;
+
+    #pragma omp parallel for reduction (+:sum) firstprivate(x)
+    for (int i=0; i <steps; i++) {
+        x = (i + 0.5) * step;
+        sum = sum + 4.0 / (1.0 + x * x);
+    }
+    return step * sum;
+}
+
+
+
+
 int main() {
     static long steps=100000000;
     double pi;
@@ -215,6 +231,15 @@ int main() {
     end_time = std::chrono::high_resolution_clock::now();
     runtime = std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start_time).count();
     std::cout << "O valor de pi calculado com omp critical com " << steps << " passos levou ";
+    std::cout << runtime << " segundo(s) e chegou no valor : ";
+    std::cout.precision(17);
+    std::cout << pi << std::endl;
+
+    start_time = std::chrono::high_resolution_clock::now();
+    pi=pi_omp_for(steps);
+    end_time = std::chrono::high_resolution_clock::now();
+    runtime = std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - start_time).count();
+    std::cout << "O valor de pi calculado com for com " << steps << " passos levou ";
     std::cout << runtime << " segundo(s) e chegou no valor : ";
     std::cout.precision(17);
     std::cout << pi << std::endl;
