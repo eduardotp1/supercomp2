@@ -100,6 +100,8 @@ int main ()
    seed(-r, r);  // The circle and square are centered at the origin
    double time = omp_get_wtime();
 
+   
+   #pragma omp parallel for reduction (+:Ncirc) private(x, y, test) 
    for(i=0;i<num_trials; i++)
    {
       x = drandom(); 
