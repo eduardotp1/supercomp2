@@ -11,14 +11,16 @@ def path_dist(seq, points):
         d += dist(points[seq[i]], points[seq[i+1]])
     return d
 
-def backtrack(points, idx, curr_cost, curr_sol, 
-              best_cost, best_seq):
+def backtrack(points, idx, curr_cost, curr_sol, best_cost, best_seq):
+    if curr_cost>best_cost:
+        return best_cost
+
     if idx == len(points):
         curr_cost += dist(points[curr_sol[0]], points[curr_sol[-1]])
         if curr_cost < best_cost:
             best_seq[:] = curr_sol.copy()
             best_cost = curr_cost
-            print('best:', best_cost, file=sys.stderr)
+            # print('best:', best_cost, file=sys.stderr)
         return best_cost
 
     for i in range(len(points)):
@@ -41,9 +43,9 @@ if __name__ == "__main__":
         x, y = [float(x) for x in input().split()]
         points.append((x, y))
     
-    usado = [False] * N
-    curr_sol = [-1] * N
-    best_sol = [-1] * N
+    usado = [False] * N 
+    curr_sol = [-1] * N 
+    best_sol = [-1] * N 
 
     curr_sol[0] = 0
     usado[0] = True
