@@ -23,5 +23,4 @@ int main() {
         std::cout << *i << " "; // este acesso é lento! -- GPU
     }
     printf("\n");
-
 }
