@@ -1,5 +1,5 @@
 // Código Matrix multiplication: C = A * B. Super simplificado.
-
+//nvcc -std=c++11 mat-mult-tile.cu -o ex && ./ex
 #include <stdio.h>
 #include <cuda_runtime.h>
 
