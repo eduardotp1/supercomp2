@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/tirta/supercomp/projeto-02/tsp-par.cpp
+iostream
+-
+vector
+-
+cmath
+-
+chrono
+-
+random
+-
+limits
+-
+utility
+-
+iomanip
+-
+
