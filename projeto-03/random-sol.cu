@@ -58,12 +58,13 @@ int main() {
 
     double x, y;
     for (int i = 0; i < N; i++) {
-        std::cin >> x; std::cin >> y;
+        std::cin >> x; 
+        std::cin >> y;
         host_x[i] = x;
         host_y[i] = y;
     }
-    // ---------------------------------------------------------------------
-    // Preparacao para pre-calcular as distancias
+
+    //copia as coisas para a gpu
     thrust::device_vector<double> dev_x(host_x);
     thrust::device_vector<double> dev_y(host_y);
     thrust::device_vector<double> dev_points_distance(N * N);
@@ -71,29 +72,22 @@ int main() {
     dim3 threads(BLOCK_SIZE, BLOCK_SIZE);
     dim3 grid(N / threads.x, N / threads.y);
 
-    calc_dist<<<grid,threads>>>(thrust::raw_pointer_cast(dev_x.data()), 
-        thrust::raw_pointer_cast(dev_y.data()),
-        thrust::raw_pointer_cast(dev_points_distance.data()), 
-        N);
+    calc_dist<<<grid,threads>>>(thrust::raw_pointer_cast(dev_x.data()), thrust::raw_pointer_cast(dev_y.data()), thrust::raw_pointer_cast(dev_points_distance.data()), N);
 
-    // ---------------------------------------------------------------------
-    // Preparacao sortear solucoes e calcular custos
-    long nSols = 1024;
+
+    double nSols = 1024;
     int gpu_threads = 1024;
     
-    thrust::device_vector<int> dev_solutions(nSols * N); // Vetor de solucoes
-    thrust::device_vector<double> dev_costs(nSols); // Vetor de custos totais de cada solucao
+    thrust::device_vector<int> dev_solutions(nSols * N); 
+    thrust::device_vector<double> dev_costs(nSols); 
 
-    // Medicao de Tempo
+
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
     cudaEventRecord(start, NULL);
     
-    random_sol<<<ceil((double) nSols/gpu_threads), gpu_threads>>>(thrust::raw_pointer_cast(dev_solutions.data()), 
-        thrust::raw_pointer_cast(dev_costs.data()), 
-        thrust::raw_pointer_cast(dev_points_distance.data()), 
-        N);
+    random_sol<<<ceil((double) nSols/gpu_threads), gpu_threads>>>(thrust::raw_pointer_cast(dev_solutions.data()), thrust::raw_pointer_cast(dev_costs.data()), thrust::raw_pointer_cast(dev_points_distance.data()), N);
 
     cudaEventRecord(stop, NULL);
     cudaEventSynchronize(stop);
@@ -105,7 +99,6 @@ int main() {
     double min_val = *iter;
 
 
-    std::cout << std::fixed << std::setprecision(5);
     std::cout << min_val;
     std::cout << " 0" << std::endl;
 
