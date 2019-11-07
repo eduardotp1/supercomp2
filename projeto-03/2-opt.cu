@@ -26,7 +26,7 @@ __global__ void calc_dist(double *X, double *Y, double *dist, int N) {
     dist[i*N+j] = sqrt(pow((X[i] - X[j]), 2) + pow((Y[i] - Y[j]), 2));
 }
 
-__global__ double calc_cost(int *solutions, double *distances, int i, int N) {
+__device__ double calc_cost(int *solutions, double *distances, int i, int N) {
     double cost = 0;
     for (int k = 1; k < N; k++) {
         cost += distances[solutions[i * N + k-1] * N + solutions[i * N + k]];
