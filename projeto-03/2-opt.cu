@@ -20,12 +20,18 @@ __global__ void calc_dist(double *X, double *Y, double *dist, int N) {
     int i = blockIdx.y*blockDim.y+threadIdx.y;
     int j = blockIdx.x*blockDim.x+threadIdx.x;
 
+    if (j >= N){
+        return;
+    }
     dist[i*N+j] = sqrt(pow((X[i] - X[j]), 2) + pow((Y[i] - Y[j]), 2));
 }
 
 __global__ void random_sol(int *solutions, double *costs, double *distances, int N, int nSols) {
     int i = blockIdx.x*blockDim.x+threadIdx.x;
 
+    if (i>nSols){
+        return;
+    }
 
     double cost = 0; 
 
@@ -86,7 +92,7 @@ int main() {
     calc_dist<<<grid,threads>>>(thrust::raw_pointer_cast(dev_x.data()), thrust::raw_pointer_cast(dev_y.data()), thrust::raw_pointer_cast(dev_points_distance.data()), N);
 
 
-    double nSols = 1024;
+    double nSols = 10000;
     int gpu_threads = 1024;
     
     thrust::device_vector<int> dev_solutions(nSols * N); 
