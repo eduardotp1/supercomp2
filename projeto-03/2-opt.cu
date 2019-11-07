@@ -74,14 +74,14 @@ __global__ void random_sol(int *solutions, double *costs, double *distances, int
                     cost = new_cost;
                     } 
                 else {
-                    int temp = solutions[i * N + d];
-                    solutions[i * N + d] = solutions[i * N + k]);
-                    solutions[i * N + k]) = temp;
+                    int temp = solutions[i * N + j];
+                    solutions[i * N + j] = solutions[i * N + k];
+                    solutions[i * N + k] = temp;
                 }
         }
     }
     costs[i] = cost;
-}
+    }}
 
 int main() {
     double N;
@@ -120,7 +120,7 @@ int main() {
     cudaEventCreate(&stop);
     cudaEventRecord(start, NULL);
     
-    random_sol<<<ceil((double) nSols/gpu_threads), gpu_threads>>>(thrust::raw_pointer_cast(dev_solutions.data()), thrust::raw_pointer_cast(dev_costs.data()), thrust::raw_pointer_cast(dev_points_distance.data()), N, nSols);
+    random_sol<<<ceil( nSols/gpu_threads), gpu_threads>>>(thrust::raw_pointer_cast(dev_solutions.data()), thrust::raw_pointer_cast(dev_costs.data()), thrust::raw_pointer_cast(dev_points_distance.data()), N, nSols);
 
     cudaEventRecord(stop, NULL);
     cudaEventSynchronize(stop);
