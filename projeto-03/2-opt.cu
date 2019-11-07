@@ -26,6 +26,15 @@ __global__ void calc_dist(double *X, double *Y, double *dist, int N) {
     dist[i*N+j] = sqrt(pow((X[i] - X[j]), 2) + pow((Y[i] - Y[j]), 2));
 }
 
+__global__ double calc_cost(int *solutions, double *distances, int i, int N) {
+    double cost = 0;
+    for (int k = 1; k < N; k++) {
+        cost += distances[solutions[i * N + k-1] * N + solutions[i * N + k]];
+    }
+    cost += distances[solutions[i * N] * N + solutions[i * N + N-1]];
+    return cost;
+}
+
 __global__ void random_sol(int *solutions, double *costs, double *distances, int N, int nSols) {
     int i = blockIdx.x*blockDim.x+threadIdx.x;
 
@@ -60,28 +69,26 @@ __global__ void random_sol(int *solutions, double *costs, double *distances, int
 
 
     double new_cost = 0;
-    for (int k = 1; k < N; k++) {
+    for (int k = 0; k < N; k++) {
         for (int j = k + 1; j < N; j++) {
             int temp = solutions[i * N + k];
             solutions[i * N + k] = solutions[i * N + j];
             solutions[i * N + j] = temp;
-            double cost = 0;
 
-            for (int k = 1; k < N; k++) {
-                cost += distances[solutions[i * N + k-1] * N + solutions[i * N + k]];
-                new_cost += distances[solutions[i * N] * N + solutions[i * N + N-1]]; 
-                if (new_cost < cost) {
-                    cost = new_cost;
-                    } 
-                else {
-                    int temp = solutions[i * N + j];
-                    solutions[i * N + j] = solutions[i * N + k];
-                    solutions[i * N + k] = temp;
-                }
+            new_cost = calc_cost(solutions, distances, i, N);
+
+            if (new_cost < cost) {
+                cost = new_cost;
+                } 
+            else {
+                int temp = solutions[i * N + j];
+                solutions[i * N + j] = solutions[i * N + k];
+                solutions[i * N + k] = temp;
+            }
         }
     }
     costs[i] = cost;
-    }}
+    }
 
 int main() {
     double N;
