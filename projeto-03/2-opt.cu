@@ -56,16 +56,31 @@ __global__ void random_sol(int *solutions, double *costs, double *distances, int
 
     cost += distances[solutions[i * N] * N + solutions[i * N + N-1]]; 
 
+    
+
+
+    double new_cost = 0;
+    for (int k = 1; k < N; k++) {
+        for (int j = k + 1; j < N; j++) {
+            int temp = solutions[i * N + k];
+            solutions[i * N + k] = solutions[i * N + j];
+            solutions[i * N + j] = temp;
+            double cost = 0;
+
+            for (int k = 1; k < N; k++) {
+                cost += distances[solutions[i * N + k-1] * N + solutions[i * N + k]];
+                new_cost += distances[solutions[i * N] * N + solutions[i * N + N-1]]; 
+                if (new_cost < cost) {
+                    cost = new_cost;
+                    } 
+                else {
+                    int temp = solutions[i * N + d];
+                    solutions[i * N + d] = solutions[i * N + k]);
+                    solutions[i * N + k]) = temp;
+                }
+        }
+    }
     costs[i] = cost;
-
-    // for (int k=0; k<i;k++){
-    //     for (int j=0;j<i;j++){
-    //         if costs[k]<costs[j]{
-
-    //         }
-    //     }
-    // }
-
 }
 
 int main() {
