@@ -69,7 +69,8 @@ __global__ void random_sol(int *solutions, double *costs, double *distances, int
 }
 
 int main() {
-    int N; std::cin >> N;
+    double N;
+    std::cin >> N;
     thrust::host_vector<double> host_x(N);
     thrust::host_vector<double> host_y(N);
 
@@ -87,7 +88,7 @@ int main() {
     thrust::device_vector<double> dev_points_distance(N * N);
 
     dim3 threads(BLOCK_SIZE, BLOCK_SIZE);
-    dim3 grid(ceil(double N / double threads.x), ceil(double N / double threads.y));
+    dim3 grid(ceil(N / threads.x), ceil(N / threads.y));
 
     calc_dist<<<grid,threads>>>(thrust::raw_pointer_cast(dev_x.data()), thrust::raw_pointer_cast(dev_y.data()), thrust::raw_pointer_cast(dev_points_distance.data()), N);
 
