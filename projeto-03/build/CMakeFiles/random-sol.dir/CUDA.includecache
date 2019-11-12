@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ec2-user/tirta/supercomp2/projeto-03/random-sol.cu
+thrust/device_vector.h
+-
+thrust/reduce.h
+-
+thrust/functional.h
+-
+iostream
+-
+stdio.h
+-
+math.h
+-
+chrono
+-
+iomanip
+-
+cuda_runtime.h
+-
+thrust/host_vector.h
+-
+curand.h
+/home/ec2-user/tirta/supercomp2/projeto-03/curand.h
+curand_kernel.h
+/home/ec2-user/tirta/supercomp2/projeto-03/curand_kernel.h
+cmath
+-
+

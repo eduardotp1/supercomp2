@@ -34,4 +34,4 @@ target_compile_options(random-sol PUBLIC -std=c++11 -O3 )
 add_executable(2-opt-sol
     2-opt-sol.cu
 )
-target_compile_options(2opt-sol PUBLIC -std=c++11 -O3)
+target_compile_options(2-opt-sol PUBLIC -std=c++11 -O3)
