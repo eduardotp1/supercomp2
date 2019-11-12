@@ -1,4 +1,4 @@
-# Projeto 2
+# Projeto 3
 ### Eduardo Tirta
 
 ## Execução
@@ -13,4 +13,4 @@ make
 
 Para rodar o programa, basta utilizar
 
-```./[nome_do_executavel] < ../[nome_do_arquivo_de_entrada]```.
+```./[nome_do_executavel] < ../[nome_do_arquivo_de_entrada]```

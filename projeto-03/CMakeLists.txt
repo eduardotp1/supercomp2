@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(project2_tsp VERSION 0.1.0)
+project(project3 LANGUAGES CXX CUDA)
 
 include(CTest)
 enable_testing()
@@ -25,3 +25,13 @@ add_executable(tsp-par
 )
 target_compile_options(tsp-par PUBLIC -O3 -fopenmp)
 target_link_libraries(tsp-par OpenMP::OpenMP_CXX)
+
+add_executable(random-sol
+    random_sol.cu
+)
+target_compile_options(random-sol PUBLIC -std=c++11 -O3 )
+
+add_executable(2opt-sol
+    2opt_sol.cu
+)
+target_compile_options(2opt-sol PUBLIC -std=c++11 -O3)
