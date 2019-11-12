@@ -27,11 +27,11 @@ target_compile_options(tsp-par PUBLIC -O3 -fopenmp)
 target_link_libraries(tsp-par OpenMP::OpenMP_CXX)
 
 add_executable(random-sol
-    random_sol.cu
+    random-sol.cu
 )
 target_compile_options(random-sol PUBLIC -std=c++11 -O3 )
 
-add_executable(2opt-sol
-    2opt_sol.cu
+add_executable(2-opt-sol
+    2-opt-sol.cu
 )
 target_compile_options(2opt-sol PUBLIC -std=c++11 -O3)
