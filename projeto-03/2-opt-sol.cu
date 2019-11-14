@@ -122,17 +122,17 @@ int main() {
     thrust::device_vector<double> dev_costs(nSols); 
 
 
-    cudaEvent_t start, stop;
+    cudaEvent_t start, end;
     cudaEventCreate(&start);
-    cudaEventCreate(&stop);
+    cudaEventCreate(&end);
     cudaEventRecord(start, NULL);
     
     random_sol<<<ceil( nSols/gpu_threads), gpu_threads>>>(thrust::raw_pointer_cast(dev_solutions.data()), thrust::raw_pointer_cast(dev_costs.data()), thrust::raw_pointer_cast(dev_points_distance.data()), N, nSols);
 
-    cudaEventRecord(stop, NULL);
-    cudaEventSynchronize(stop);
-    float msecTotal = 0.0f;
-    cudaEventElapsedTime(&msecTotal, start, stop);
+    cudaEventRecord(end, NULL);
+    cudaEventSynchronize(end);
+    float time = 0.0f;
+    cudaEventElapsedTime(&time, start, end);
 
     thrust::device_vector<double>::iterator iter = thrust::min_element(dev_costs.begin(), dev_costs.end());
     int position = iter - dev_costs.begin();
@@ -147,5 +147,6 @@ int main() {
     }
     std::cout << std::endl;
 
+    std::cout << time << std::endl;
     return 0;
 }
