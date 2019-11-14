@@ -141,7 +141,7 @@
     \def\gt{>}
     \def\lt{<}
     % Document parameters
-    \title{Eduardo Tirta - Projeto 2}
+    \title{Eduardo Tirta - Projeto 3}
     
     
     
@@ -291,7 +291,7 @@
 \end{Verbatim}
 
 
-    \section{Projeto 2}\label{projeto-2}
+    \section{Projeto 3}\label{projeto-3}
 
 \subsubsection{Eduardo Tirta}\label{eduardo-tirta}
 
@@ -331,57 +331,28 @@ projeto são
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  implementar uma versão sequencial em C++ do caixeiro viajante a partir
-  de uma implementação em Python.
-\item
-  Estudar e implementar os seguintes métodos paralelos:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    enumeracão exaustiva em paralelo
-  \item
-    busca local paralela usando 2-opt
-  \item
-    branch and bound (ou heuristic search)
-  \end{itemize}
+  Implementar um aprimoramento do codigo do projeto 2, enviando os dados
+  para GPU
 \end{enumerate}
 
     \subsection{Desenvolvimento e
 Otimização}\label{desenvolvimento-e-otimizauxe7uxe3o}
 
 O projeto consiste na otimização do problema do caixeiro viajante,
-fornecido em python.
+desenvolvido no projeto 2 desta disciplina.
 
-O primeiro passo do trabalho foi transformar o código em python para
-C++, assim, possibilita a paralelização do problema de enumeração
-exaustiva. Essa otimização paralelizada utiliza OMP parallel para gerar
-tasks que vão ser chamadas recursivamente e assim, gerar uma solução
-mais rápida por dividir a quantidade de processos em threads. Outra
-solução para deixar mais rápido o tempo de resposta do programa, foi
-utilizar o método branch and bound, o que faz com que o código pare de
-percorrer outras possibilidades, caso o valor calculado até aquele
-momento seja maior que o custo da melhor solução que já foi terminada,
-esse método já auxilia muito a velocidade. Já que impede de percorrer
-exaustivamente todo os caminhos possíveis.
-
-\subsection{Branch and bound}\label{branch-and-bound}
-
-O conceito do branch and bound é bem simples, ele otimiza o algoritmo
-fazendo com que o programa não necessita realizar todos os caminhos
-exaustivamente, claro que no pior caso, pode ser que percorra todo o
-caminho e possibilidade, mas geralmente não existe essa possibilidade. O
-código impede que seja totalmente percorrida, com uma base que ao
-percorrer um caminho e visto o custo dele, se no meio do proximo caminho
-ja for maior que o caminho percorrido anteriormente, nao é necessario
-terminar o caminho, já que sabemos que existe um caminho de melhor
-distância.
+Como o processamento de uma GPU é maior, é aceitável gerar soluções
+randomicas, possuindo um resultado para a nossa solução. Mas para
+garantir que o código gere uma solução ótima, é feito um desenvolvimento
+de uma solução 2-opt. Essa solução é implementada verificando se existe
+uma solução melhor no momento que invertemos dois pontos, evitando
+cruzamentos.
 
     \subsection{Especificação do
 computador}\label{especificauxe7uxe3o-do-computador}
 
-Todos os testes foram feitos em um computador rodando em lixux, ubuntu
-18 com processador i7, setima geração e 16 de RAM.
+Os testes são feitos em um computador hospetado na AWS do modelo
+p2.xlarge
 
     \subsection{Testes do projeto}\label{testes-do-projeto}
 
@@ -392,22 +363,10 @@ viajante precisa passar.
 \begin{itemize}
 \tightlist
 \item
-  Arquivo tsp.py, codigo referencia feita pelo Igor utilizando o método
-  de enumeração exaustiva
-\item
-  Arquivo tsp-seq.cpp, codigo "traduzido" do referencia feita em python
-\item
-  Arquivo tsp-seq-bb.cpp, codigo que utiliza o metodo do branch and
-  bound
+  2-opt-sol.cu
 \item
   Arquivo tsp-par.cpp, otimiza o arquivo tsp-seq.cpp em paralelo, assim,
   usamos o poder computacional para ganhar velocidade
-\item
-  Arquivo tsp-bb.cpp, codigo que utiliza o metodo do branch and bound em
-  paralelo.
-\item
-  Arquivo gerador.py, gera um arquivo com uma quantidade de pontos que o
-  viajante deve percorrer.
 \end{itemize}
 
 \texttt{python3\ gerador.py\ \textgreater{}\ {[}nome\_do\_arquivo\_de\_entrada{]}}
@@ -416,9 +375,7 @@ Depois é necessário digitar a quantidade de pontos que deseja gerar para
 o viajante passar
 
 Além disso, o projeto possui um CMakeLists.txt que possibilita a
-compilação dos executáveis. São eles: * tsp-seq (sequencial) *
-tsp-seq-bb (sequencial branch and bound) * tsp-par (paralelo) * tsp-bb
-(paralelo branch and bound)
+compilação dos executáveis. São eles: * 2-opt-sol * tsp-par (paralelo)
 
 Siga os comando abaixo para gerar os arquivos compiláveis:
 
@@ -435,298 +392,42 @@ Para rodar o programa, basta utilizar
 
     \subsection{Resultados}\label{resultados}
 
-Os testes foram realizados com entradas de tamanho 10 e 12, para
+Os testes foram realizados com entrada de diversos tamanhos, para
 verificar se o codigo estava certo, foi feito a comparacao com o arquivo
-tsp.py e testando uma certa quantidade de vezes para garantir que o
-resultado de entrada e de saida estavam condizentes com o arquivo
-referencia. O tempo de execucao eh medido usando chrono high resolution.
+tsp.py em tamanhos menores e testando uma certa quantidade de vezes para
+garantir que o resultado de entrada e de saida estavam condizentes com o
+arquivo referencia. O tempo de execucao eh medido usando chrono high
+resolution para a versao em paralelo na CPU e usado o cudaEvent\_t.
 
-    \paragraph{Testando se os valores estao
-corretos}\label{testando-se-os-valores-estao-corretos}
+    Para tamanhos pequenos, o algoritmo mostra que ao rodar em GPU, o código
+já se mostra muito mais eficiente, estes valores apresentados abaixo com
+a entrada de 12, roda cerca de 300\% mais rapido.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}2}]:} \PY{k}{def} \PY{n+nf}{run\PYZus{}test}\PY{p}{(}\PY{n}{executable}\PY{p}{,} \PY{n}{input\PYZus{}file}\PY{p}{,}\PY{n}{j}\PY{p}{)}\PY{p}{:}
-            \PY{k}{with} \PY{n+nb}{open}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n}{input\PYZus{}file}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rb}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)} \PY{k}{as} \PY{n}{f}\PY{p}{:}
-                \PY{n}{output} \PY{o}{=} \PY{n}{subprocess}\PY{o}{.}\PY{n}{check\PYZus{}output}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./build/}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{executable}\PY{p}{)}\PY{p}{]}\PY{p}{,} \PY{n}{stdin}\PY{o}{=}\PY{n}{f}\PY{p}{)}
-                \PY{n}{output} \PY{o}{=} \PY{n}{output}\PY{o}{.}\PY{n}{decode}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{utf\PYZhy{}8}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{splitlines}\PY{p}{(}\PY{p}{)}
-                \PY{n}{tempo} \PY{o}{=} \PY{n}{output}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{p}{)}
-            
-            \PY{n+nb}{print}\PY{p}{(}\PY{n}{f}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}}\PY{l+s+si}{\PYZob{}executable\PYZcb{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}}\PY{l+s+si}{\PYZob{}input\PYZus{}file\PYZcb{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{output}\PY{p}{)}\PY{p}{)}
-            \PY{k}{return} \PY{p}{[}\PY{n}{executable}\PY{p}{,} \PY{n}{input\PYZus{}file}\PY{p}{,} \PY{n}{output}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{tempo}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{j}\PY{p}{]}
-\end{Verbatim}
+CPU - 2874 milissegundos
 
+GPU - 11.92 milissegundos
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}3}]:} \PY{c+c1}{\PYZsh{} Pegar o nome dos executaveis}
-        \PY{n}{executables} \PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{p}{[}\PY{n}{n} \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{os}\PY{o}{.}\PY{n}{listdir}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./build/}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{k}{if} \PY{n}{n}\PY{o}{.}\PY{n}{startswith}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tsp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{]}\PY{p}{)}
-        \PY{n}{executables}
-\end{Verbatim}
+    \begin{figure}
+\centering
+\includegraphics{attachment:image.png}
+\caption{image.png}
+\end{figure}
 
+    Para tamanhos grandes, como 125 pontos, o algoritmo mostra que rodar em
+GPU é a única solução, mesmo demorando um pouco, ainda é capaz de
+realizar algumas ações com tamanhos de entradas maiores, enquanto apenas
+com a CPU, o tempo é indeterminado
 
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}3}]:} ['tsp-par', 'tsp-seq', 'tsp-seq-bb']
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}4}]:} \PY{c+c1}{\PYZsh{} Pegar o nome das entradas menores}
-        \PY{n}{inputs} \PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{p}{[}\PY{n}{n} \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{os}\PY{o}{.}\PY{n}{listdir}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{k}{if} \PY{n}{n}\PY{o}{.}\PY{n}{startswith}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{in}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{]}\PY{p}{)}
-        \PY{n}{inputs}
-\end{Verbatim}
+CPU - N/A
 
+GPU - 5381.78 milissegundos
 
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}4}]:} ['in08', 'in10', 'in12']
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{executables} \PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{p}{[}\PY{n}{n} \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{os}\PY{o}{.}\PY{n}{listdir}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./build/}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{k}{if} \PY{n}{n}\PY{o}{.}\PY{n}{startswith}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tsp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{]}\PY{p}{)}
-        \PY{n}{inputs} \PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{p}{[}\PY{n}{n} \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{os}\PY{o}{.}\PY{n}{listdir}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{k}{if} \PY{n}{n}\PY{o}{.}\PY{n}{startswith}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{in0}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{]}\PY{p}{)}
-        \PY{n}{data} \PY{o}{=} \PY{p}{[}\PY{p}{]}
-        \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{:}
-            \PY{k}{for} \PY{n}{e} \PY{o+ow}{in} \PY{n}{executables}\PY{p}{:}
-                \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{inputs}\PY{p}{:}
-                    \PY{n}{data}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{run\PYZus{}test}\PY{p}{(}\PY{n}{e}\PY{p}{,} \PY{n}{i}\PY{p}{,}\PY{n}{j}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
+    \begin{figure}
+\centering
+\includegraphics{attachment:image.png}
+\caption{image.png}
+\end{figure}
 
-
-    \begin{Verbatim}[commandchars=\\\{\}]
---tsp-par------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 29 ms
---tsp-seq------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-seq-bb------in08--
-14964.03946 1
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-par------in08--
-14964.03946 0
-0 3 6 4 1 5 7 2 
-Demorou: 10 ms
---tsp-seq------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 2 ms
---tsp-seq-bb------in08--
-14964.03946 1
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-par------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 27 ms
---tsp-seq------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-seq-bb------in08--
-14964.03946 1
-0 2 7 5 1 4 6 3 
-Demorou: 0 ms
---tsp-par------in08--
-14964.03946 0
-0 3 6 4 1 5 7 2 
-Demorou: 20 ms
---tsp-seq------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 0 ms
---tsp-seq-bb------in08--
-14964.03946 1
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-par------in08--
-14964.03946 0
-0 3 6 4 1 5 7 2 
-Demorou: 16 ms
---tsp-seq------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-seq-bb------in08--
-14964.03946 1
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-par------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 20 ms
---tsp-seq------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-seq-bb------in08--
-14964.03946 1
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-par------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 6 ms
---tsp-seq------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 0 ms
---tsp-seq-bb------in08--
-14964.03946 1
-0 2 7 5 1 4 6 3 
-Demorou: 0 ms
---tsp-par------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 15 ms
---tsp-seq------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-seq-bb------in08--
-14964.03946 1
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-par------in08--
-14964.03946 0
-0 3 6 4 1 5 7 2 
-Demorou: 14 ms
---tsp-seq------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 1 ms
---tsp-seq-bb------in08--
-14964.03946 1
-0 2 7 5 1 4 6 3 
-Demorou: 0 ms
---tsp-par------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 11 ms
---tsp-seq------in08--
-14964.03946 0
-0 2 7 5 1 4 6 3 
-Demorou: 0 ms
---tsp-seq-bb------in08--
-14964.03946 1
-0 2 7 5 1 4 6 3 
-Demorou: 0 ms
-
-    \end{Verbatim}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}6}]:} \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{data}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}
-        \PY{n}{df}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}6}]:}              0     1              2     3    4
-        0      tsp-par  in08  14964.03946 0  29.0  0.0
-        1      tsp-seq  in08  14964.03946 0   1.0  0.0
-        2   tsp-seq-bb  in08  14964.03946 1   1.0  0.0
-        3      tsp-par  in08  14964.03946 0  10.0  1.0
-        4      tsp-seq  in08  14964.03946 0   2.0  1.0
-        5   tsp-seq-bb  in08  14964.03946 1   1.0  1.0
-        6      tsp-par  in08  14964.03946 0  27.0  2.0
-        7      tsp-seq  in08  14964.03946 0   1.0  2.0
-        8   tsp-seq-bb  in08  14964.03946 1   0.0  2.0
-        9      tsp-par  in08  14964.03946 0  20.0  3.0
-        10     tsp-seq  in08  14964.03946 0   0.0  3.0
-        11  tsp-seq-bb  in08  14964.03946 1   1.0  3.0
-        12     tsp-par  in08  14964.03946 0  16.0  4.0
-        13     tsp-seq  in08  14964.03946 0   1.0  4.0
-        14  tsp-seq-bb  in08  14964.03946 1   1.0  4.0
-        15     tsp-par  in08  14964.03946 0  20.0  5.0
-        16     tsp-seq  in08  14964.03946 0   1.0  5.0
-        17  tsp-seq-bb  in08  14964.03946 1   1.0  5.0
-        18     tsp-par  in08  14964.03946 0   6.0  6.0
-        19     tsp-seq  in08  14964.03946 0   0.0  6.0
-        20  tsp-seq-bb  in08  14964.03946 1   0.0  6.0
-        21     tsp-par  in08  14964.03946 0  15.0  7.0
-        22     tsp-seq  in08  14964.03946 0   1.0  7.0
-        23  tsp-seq-bb  in08  14964.03946 1   1.0  7.0
-        24     tsp-par  in08  14964.03946 0  14.0  8.0
-        25     tsp-seq  in08  14964.03946 0   1.0  8.0
-        26  tsp-seq-bb  in08  14964.03946 1   0.0  8.0
-        27     tsp-par  in08  14964.03946 0  11.0  9.0
-        28     tsp-seq  in08  14964.03946 0   0.0  9.0
-        29  tsp-seq-bb  in08  14964.03946 1   0.0  9.0
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{executables} \PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{p}{[}\PY{n}{n} \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{os}\PY{o}{.}\PY{n}{listdir}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./build/}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{k}{if} \PY{n}{n}\PY{o}{.}\PY{n}{startswith}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tsp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{]}\PY{p}{)}
-        \PY{n}{inputs} \PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{p}{[}\PY{n}{n} \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{os}\PY{o}{.}\PY{n}{listdir}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{k}{if} \PY{n}{n}\PY{o}{.}\PY{n}{startswith}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{in1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{]}\PY{p}{)}
-        \PY{n}{data} \PY{o}{=} \PY{p}{[}\PY{p}{]}
-        \PY{k}{for} \PY{n}{e} \PY{o+ow}{in} \PY{n}{executables}\PY{p}{:}
-            \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{inputs}\PY{p}{:}
-                \PY{n}{data}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{run\PYZus{}test}\PY{p}{(}\PY{n}{e}\PY{p}{,} \PY{n}{i}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
---tsp-par------in10--
-27516.27998 0
-0 1 7 9 3 4 5 8 2 6 
-Demorou: 98 ms
---tsp-par------in12--
-11533.81823 0
-0 5 6 11 9 3 10 7 4 2 1 8 
-Demorou: 3756 ms
---tsp-seq------in10--
-22108.76156 0
-0 6 2 8 5 4 1 3 7 9 
-Demorou: 48 ms
---tsp-seq------in12--
-11533.81823 0
-0 5 6 11 9 3 10 7 4 2 1 8 
-Demorou: 6290 ms
---tsp-seq-bb------in10--
-22108.76156 1
-0 6 2 8 5 4 1 3 7 9 
-Demorou: 5 ms
---tsp-seq-bb------in12--
-11533.81823 1
-0 5 6 11 9 3 10 7 4 2 1 8 
-Demorou: 208 ms
-
-    \end{Verbatim}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{data}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{float64}\PY{p}{)}
-        \PY{n}{df}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}8}]:}             0     1              2       3    4
-        0     tsp-par  in10  27516.27998 0    98.0  0.0
-        1     tsp-par  in12  11533.81823 0  3756.0  0.0
-        2     tsp-seq  in10  22108.76156 0    48.0  0.0
-        3     tsp-seq  in12  11533.81823 0  6290.0  0.0
-        4  tsp-seq-bb  in10  22108.76156 1     5.0  0.0
-        5  tsp-seq-bb  in12  11533.81823 1   208.0  0.0
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}9}]:} \PY{n}{groups} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
-        
-        \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
-        \PY{k}{for} \PY{n}{name}\PY{p}{,} \PY{n}{group} \PY{o+ow}{in} \PY{n}{groups}\PY{p}{:}
-            \PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{group}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{group}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ms}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{n}{group}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tempos para executáveis diferentes}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tempo (ms)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Entrada Utilizada}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{loc}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{upper left}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{bbox\PYZus{}to\PYZus{}anchor}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
-        \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
 
     % Add a bibliography block to the postdoc
     
