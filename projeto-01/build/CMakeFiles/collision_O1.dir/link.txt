@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/collision_O1.dir/rectangle.cpp.o CMakeFiles/collision_O1.dir/collision.cpp.o CMakeFiles/collision_O1.dir/main.cpp.o  -o collision_O1 
